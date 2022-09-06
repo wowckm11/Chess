@@ -542,15 +542,7 @@ class ChessApp:
             if type(gamestate[7][i]) is Pawn:
                 self.current_board.promote((7, i))
     
-    
-    
-    
-    
-
-
-                
-
-            
+         
 
 new_game = ChessApp()
 new_game.start_game()

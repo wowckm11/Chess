@@ -27,31 +27,96 @@ class ChessBoard:
                     number += 1
             self.__chessboard.append(new_row)        
 
-    def fill_chessboard(self):
-        for i in range(8):
-            if i == 0 or i == 7:
-                if i == 0:
-                    owner = 1
-                else:
-                    owner = 0
-                self.__chessboard[i][0] = Rook(owner, (i,0))
-                self.__chessboard[i][1] = Horse(owner, (i,1))
-                self.__chessboard[i][2] = Bishop(owner, (i,2))
-                self.__chessboard[i][3] = Queen(owner, (i,3))
-                self.__chessboard[i][4] = King(owner, (i,4))
-                self.__chessboard[i][5] = Bishop(owner, (i,5))
-                self.__chessboard[i][6] = Horse(owner, (i,6))
-                self.__chessboard[i][7] = Rook(owner, (i,7))
-            if i == 1 or i == 6:
-                if i == 1:
-                    owner = 1
-                else:
-                    owner = 0
-                for f in range(8):
-                    self.__chessboard[i][f] = Pawn(owner, (i,f))
-
-        return self
-
+    def fill_chessboard(self, mode = None):
+        if mode == None:
+            for i in range(8):
+                if i == 0 or i == 7:
+                    if i == 0:
+                        owner = 1
+                    else:
+                        owner = 0
+                    self.__chessboard[i][0] = Rook(owner, (i,0))
+                    self.__chessboard[i][1] = Horse(owner, (i,1))
+                    self.__chessboard[i][2] = Bishop(owner, (i,2))
+                    self.__chessboard[i][3] = Queen(owner, (i,3))
+                    self.__chessboard[i][4] = King(owner, (i,4))
+                    self.__chessboard[i][5] = Bishop(owner, (i,5))
+                    self.__chessboard[i][6] = Horse(owner, (i,6))
+                    self.__chessboard[i][7] = Rook(owner, (i,7))
+                if i == 1 or i == 6:
+                    if i == 1:
+                        owner = 1
+                    else:
+                        owner = 0
+                    for f in range(8):
+                        self.__chessboard[i][f] = Pawn(owner, (i,f))
+            return self
+        
+        elif mode == 'movedpawn':
+            for i in range(8):
+                if i == 0 or i == 7:
+                    if i == 0:
+                        owner = 1
+                    else:
+                        owner = 0
+                    self.__chessboard[i][0] = Rook(owner, (i,0))
+                    self.__chessboard[i][1] = Horse(owner, (i,1))
+                    self.__chessboard[i][2] = Bishop(owner, (i,2))
+                    self.__chessboard[i][3] = Queen(owner, (i,3))
+                    self.__chessboard[i][4] = King(owner, (i,4))
+                    self.__chessboard[i][5] = Bishop(owner, (i,5))
+                    self.__chessboard[i][6] = Horse(owner, (i,6))
+                    self.__chessboard[i][7] = Rook(owner, (i,7))
+                if i == 2 or i == 5:
+                    if i == 2:
+                        owner = 1
+                    else:
+                        owner = 0
+                    for f in range(8):
+                        self.__chessboard[i][f] = Pawn(owner, (i,f))
+            return self
+        
+        elif mode == 'closerank':
+            for i in range(8):
+                if i == 0 or i == 7:
+                    if i == 0:
+                        owner = 1
+                    else:
+                        owner = 0
+                    self.__chessboard[i][0] = Rook(owner, (i,0))
+                    self.__chessboard[i][1] = Horse(owner, (i,1))
+                    self.__chessboard[i][2] = Bishop(owner, (i,2))
+                    self.__chessboard[i][3] = Queen(owner, (i,3))
+                    self.__chessboard[i][4] = King(owner, (i,4))
+                    self.__chessboard[i][5] = Bishop(owner, (i,5))
+                    self.__chessboard[i][6] = Horse(owner, (i,6))
+                    self.__chessboard[i][7] = Rook(owner, (i,7))
+                if i == 3 or i == 4:
+                    if i == 3:
+                        owner = 1
+                    else:
+                        owner = 0
+                    for f in range(4):
+                        self.__chessboard[i][f+2] = Pawn(owner, (i,f+2))
+                        self.__chessboard[i][f+2].last_position = (i,f+2)
+            return self
+        elif mode == 'nopawn':
+            for i in range(8):
+                if i == 0 or i == 7:
+                    if i == 0:
+                        owner = 1
+                    else:
+                        owner = 0
+                    self.__chessboard[i][0] = Rook(owner, (i,0))
+                    self.__chessboard[i][1] = Horse(owner, (i,1))
+                    self.__chessboard[i][2] = Bishop(owner, (i,2))
+                    self.__chessboard[i][3] = Queen(owner, (i,3))
+                    self.__chessboard[i][4] = King(owner, (i,4))
+                    self.__chessboard[i][5] = Bishop(owner, (i,5))
+                    self.__chessboard[i][6] = Horse(owner, (i,6))
+                    self.__chessboard[i][7] = Rook(owner, (i,7))
+            return self
+    
     @property
     def chessboard(self):
         return self.__chessboard
@@ -140,7 +205,7 @@ class ChessBoard:
         new_board = ChessBoard(chessboard)
         for item in new_board.all_legal_moves(owner):
             x,y = item
-            if type(self.chessboard[x][y]) is King:
+            if type(self.chessboard[x][y]) is King and self.chessboard[x][y].owner == owner:
                 return True
         return False
 
@@ -151,7 +216,7 @@ class ChessBoard:
         a,b = end_square
         new_board = []
         
-        #creating independable list to NOT modify the existing self.chessboard
+        #creating independent list to NOT modify the existing self.chessboard
         for row in self.chessboard:
             new_row = []
             for item in row:
@@ -241,14 +306,14 @@ class Rook(Piece):
                 break
             list_of_all_moves.append((x,i))
 
-        for i in range(x-1, 0, -1):
+        for i in range(x-1, -1, -1):
             if issubclass(type(chessboard.chessboard[i][y]),Piece):
                 if chessboard.chessboard[i][y].owner != self.owner:
                     list_of_all_moves.append((i, y))  
                 break
             list_of_all_moves.append((i,y))
 
-        for i in range(y-1, 0, -1):
+        for i in range(y-1, -1, -1):
             if issubclass(type(chessboard.chessboard[x][i]),Piece):
                 if chessboard.chessboard[x][i].owner != self.owner:
                     list_of_all_moves.append((x, i))
@@ -269,25 +334,26 @@ class Bishop(Piece):
         #north diagonals
         for i in range(x-1, 0, -1):
             try:
+                if i >0 and (y-(x-i)) >= 0:
                 
-                if issubclass(type(chessboard[i][y-(x-i)]),Piece):
-                    #if collision is with enemy, move is possible
-                    if chessboard[i][y-(x-i)].owner != self.owner: 
-                        list_of_all_moves.append((i,y-(x-i)))
-                    break
-                list_of_all_moves.append((i,y-(x-i))) 
+                    if issubclass(type(chessboard[i][y-(x-i)]),Piece):
+                        #if collision is with enemy, move is possible
+                        if chessboard[i][y-(x-i)].owner != self.owner: 
+                            list_of_all_moves.append((i,y-(x-i)))
+                        break
+                    list_of_all_moves.append((i,y-(x-i))) 
 
             except IndexError:
                 continue
 
         for i in range(x-1, 0, -1):
             try:
-
-                if issubclass(type(chessboard[i][y+(x-i)]),Piece):
-                    if chessboard[i][y+(x-i)].owner != self.owner:
-                        list_of_all_moves.append((i, y+(x-i)))
-                    break
-                list_of_all_moves.append((i,y+(x-i))) 
+                if i >0 and (y+(x-i)) >= 0:
+                    if issubclass(type(chessboard[i][y+(x-i)]),Piece):
+                        if chessboard[i][y+(x-i)].owner != self.owner:
+                            list_of_all_moves.append((i, y+(x-i)))
+                        break
+                    list_of_all_moves.append((i,y+(x-i))) 
 
             except IndexError:
                 continue
@@ -296,23 +362,24 @@ class Bishop(Piece):
         for i in range(x+1, 8):
 
             try:
-                if issubclass(type(chessboard[i][y-(i-x)]),Piece):
-                    if chessboard[i][y-(i-x)].owner != self.owner:
-                        list_of_all_moves.append((i, y-(i-x)))
-                    break
-                list_of_all_moves.append((i,y-(i-x))) 
+                if i >0 and (y-(i-x)) >= 0:
+                    if issubclass(type(chessboard[i][y-(i-x)]),Piece):
+                        if chessboard[i][y-(i-x)].owner != self.owner:
+                            list_of_all_moves.append((i, y-(i-x)))
+                        break
+                    list_of_all_moves.append((i,y-(i-x))) 
 
             except IndexError:
                 continue
 
         for i in range(x+1, 8):
             try:
-
-                if issubclass(type(chessboard[i][y+(i-x)]),Piece):
-                    if chessboard[i][y+(i-x)].owner != self.owner:
-                        list_of_all_moves.append((i, y+(i-x)))
-                    break
-                list_of_all_moves.append((i,y+(i-x))) 
+                if i >0 and (y+(i-x)) >= 0:
+                    if issubclass(type(chessboard[i][y+(i-x)]),Piece):
+                        if chessboard[i][y+(i-x)].owner != self.owner:
+                            list_of_all_moves.append((i, y+(i-x)))
+                        break
+                    list_of_all_moves.append((i,y+(i-x))) 
 
             except IndexError:
                 continue   
@@ -337,13 +404,14 @@ class King(Piece):
             #if move would lead to an empty square 
             #or a square controlled by enemy it is allowed
             #moves that would lead out of chessboard, are ommited by try:except
-            try:
-                if type(chessboard_positions[a][b]) is int:
-                    moves_in_board.append(item)
-                elif chessboard_positions[a][b].owner != self.owner:
-                    moves_in_board.append(item)
-            except IndexError:
-                continue
+            if a >= 0 and b >= 0:
+                try:
+                    if type(chessboard_positions[a][b]) is int:
+                        moves_in_board.append(item)
+                    elif chessboard_positions[a][b].owner != self.owner:
+                        moves_in_board.append(item)
+                except IndexError:
+                    continue
         if self.owner == 1:
             enemy_moves = chessboard.all_legal_moves(0)
         elif self.owner == 0:
@@ -359,7 +427,9 @@ class Queen(Piece):
     def legal_moves(self, chessboard:ChessBoard):
         new_bishop = Bishop(self.owner, self.position)
         new_rook = Rook(self.owner, self.position)
-        queen_moves = new_bishop.legal_moves(chessboard)+ new_rook.legal_moves(chessboard)
+        bishop_part, en_peasant = new_bishop.legal_moves(chessboard)
+        rook_part, en_peasant = new_rook.legal_moves(chessboard)
+        queen_moves = bishop_part + rook_part
         return queen_moves, None
 
 
@@ -381,9 +451,9 @@ class Pawn(Piece):
                     #can make a double move from starting position
                     if x == 1 and type(chessboard[x+2][y]) is int:
                         list_of_all_moves.append((x+2,y))
-                #taking oponent's pieces diagonaly
             except (IndexError, AttributeError):
                 pass
+            #taking oponent's pieces diagonaly
             try:
                 if chessboard[x+1][y-1].owner == 0:
                         list_of_all_moves.append((x+1,y-1))
@@ -460,7 +530,7 @@ class ChessApp:
         self.current_board = ChessBoard()
         self.current_board.create_chessboard()
         self.starting_board.create_chessboard()
-        self.current_board = self.current_board.fill_chessboard()
+        self.current_board = self.current_board.fill_chessboard(mode='nopawn')
         gamestate = self.current_board.chessboard
         base_board = self.starting_board.chessboard
         turn = 0
@@ -519,7 +589,8 @@ class ChessApp:
                             print("invalid move")
                     else:
                         print("this move would forfeit your king")
-                else: print("this piece doesn't belong to you")
+                else: 
+                    print("this piece doesn't belong to you")
 
     def check_material(self):
         all_squares = []
@@ -541,8 +612,8 @@ class ChessApp:
         for i in range(8):
             if type(gamestate[7][i]) is Pawn:
                 self.current_board.promote((7, i))
-    
-         
 
-new_game = ChessApp()
-new_game.start_game()
+if __name__ == '__main__':       
+
+    new_game = ChessApp()
+    new_game.start_game()
